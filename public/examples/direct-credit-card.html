@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div class="container">
+	<form class="form-horizontal needs-validation" role="form" id="theForm" onsubmit="return false" novalidate>
+		<fieldset>
+			<legend>AppDirect Payment Method Creator</legend>
+			<legend>Billing Details</legend>
+			<div class="form-group">
+				<label for="number" class="control-label">Card Number</label>
+				<input type="text" id="number" class="form-control col-md-6" data-ad="number" required>
+				<div class="invalid-feedback">
+					Card number required.
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="cardHolderName">Name on Card</label>
+				<input type="text" class="form-control col-md-6" id="cardHolderName" data-ad="cardHolderName" required>
+				<div class="invalid-feedback">
+					Name required.
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-2">
+					<label for="expirationMonth">Expiration Date</label>
+					<select class="form-control" id="expirationMonth" data-ad="expirationMonth" required>
+						<option value="">Month</option>
+						<option value="01">Jan (01)</option>
+						<option value="02">Feb (02)</option>
+						<option value="03">Mar (03)</option>
+						<option value="04">Apr (04)</option>
+						<option value="05">May (05)</option>
+						<option value="06">June (06)</option>
+						<option value="07">July (07)</option>
+						<option value="08">Aug (08)</option>
+						<option value="09">Sep (09)</option>
+						<option value="10">Oct (10)</option>
+						<option value="11">Nov (11)</option>
+						<option value="12">Dec (12)</option>
+					</select>
+					<div class="invalid-feedback">
+						Expiration date required.
+					</div>
+				</div>
+				<div class="form-group col-md-2">
+					<label for="expirationYear">&nbsp</label>
+					<select id="expirationYear" class="form-control" name="expirationYear" data-ad="expirationYear" required>
+						<option value="">Year</option>
+						<option value="2018">2018</option>
+						<option value="2019">2019</option>
+						<option value="2020">2020</option>
+						<option value="2021">2021</option>
+						<option value="2022">2022</option>
+						<option value="2023">2023</option>
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="securityCode">CVV</label>
+					<input type="text" class="form-control" name="securityCode" id="securityCode" data-ad="securityCode" required>
+					<div class="invalid-feedback">
+						CVV required.
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<div>&nbsp;</div>
+		<fieldset>
+			<legend>Billing Address</legend>
+			<div class="form-group">
+				<label for="country">Country</label>
+				<select id="country" class="form-control col-md-6 crs-country" data-region-id="state" data-value="shortcode"
+						name="country" data-ad="country" required>
+				</select>
+				<div class="invalid-feedback">
+					Country required.
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="street1">Address</label>
+				<input type="text" class="form-control col-md-6" id="street1" data-ad="street1" required>
+				<div class="invalid-feedback">
+					Address required.
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-2">
+					<label for="city">City</label>
+					<input type=text class="form-control" data-ad="city" id="city" required>
+					<div class="invalid-feedback">
+						City required.
+					</div>
+				</div>
+				<div class="form-group col-md-2">
+					<label for="state">State</label>
+					<select class="form-control" name="state" data-ad="state" id="state" required>
+					</select>
+					<div class="invalid-feedback">
+						State required.
+					</div>
+				</div>
+				<div class="form-group col-md-2">
+					<label for="zip">Zip</label>
+					<input type="text" class="form-control" id="zip" data-ad="zip" required>
+					<div class="invalid-feedback">
+						Zip required.
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<button type="button" onclick="return submitForm();" class="btn btn-primary">Save Card</button>
+			</div>
+		</fieldset>
+	</form>
+
+	<div>
+		<legend>Response:</legend>
+		<div class="response-container"></div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    function submitForm() {
+        // Validate form
+        const form = document.getElementById('theForm');
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+
+        // Configure payment library
+        const payment = AppDirect.payment;
+        payment.configure({
+            host: 'API_URL',
+            client_token: 'CLIENT_TOKEN'
+        });
+
+        // Create a payment method for a user/company
+        const user = {
+            userId: 'USER_ID',
+            companyId: 'COMPANY_ID'
+        };
+        payment.createPaymentMethod(form, user.userId, user.companyId).then(res => {
+            // This confirms the payment method has been created
+            console.log(res.accountDisplay);
+        });
+
+        // Retrieve payment methods for a user/company
+        payment.listPaymentMethods(user.userId, user.companyId).then(result => {
+            const container = $('.response-container');
+            container.append(
+                $('<dl>').append('Card ending in '
+                    + result[0].accountDisplay + ' has been saved successfully!')
+            );
+        });
+        return false;
+    }
+</script>
+
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<script src="https://ad-js-sdk.appdirect.com/payment.js"></script>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/crs.min.js"></script>
+
+</body>
+</html>
