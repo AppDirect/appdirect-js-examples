@@ -8,7 +8,7 @@ This demo features:
 
 ## Documentation
 
-[Getting Started]() | [API Documentation](https://app.swaggerhub.com/apis/ds-support-2/PaymentMethodApi/2.0#/)
+[Getting Started](https://help.appdirect.com/appmarket/Default.htm#checkout-api/payments-js-intro.htm) | [API Documentation](https://help.appdirect.com/appmarket/Default.htm#checkout-api/payments-js-use.htm?TocPath=Integration|Payment.js%20guide|Choose%20your%20authorization%20method|_____0)
 
 ## Installation
 ```html
